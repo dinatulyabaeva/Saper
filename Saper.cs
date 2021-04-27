@@ -6,13 +6,16 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 using System.Windows.Forms;
 
 namespace saper
 {
     public partial class MainForm : Form
     {
-        int offset = 40;
+        int seconds;
+        int minutes;
+        int size = 40;
         int width = 9;
         int height = 9;
         bool isFirstClick = true;
@@ -23,6 +26,7 @@ namespace saper
         public MainForm()
         {
             InitializeComponent();
+            //richTextBox_for_scores.Text=File.ReadAllText("score.t$");
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -32,10 +36,12 @@ namespace saper
         }
         
         void FieldButtonClick(object sender, MouseEventArgs e)
+            //превое нажатие всегда на пустую клетку
+            //генерация заново значения isBomb клеток, если нажал на бомбу
         {
 
             FieldButton clickedButton = (FieldButton)sender;
-            if (e.Button == MouseButtons.Left && clickedButton.isClickable)  // новое
+            if (e.Button == MouseButtons.Left && clickedButton.isClickable)  
             {
                 if (clickedButton.isBomb)
                 {
@@ -54,7 +60,7 @@ namespace saper
                 }
                 else
                 {
-                    EmptyFieldButtonClick(clickedButton);
+                    EmptyFieldButtonClick(clickedButton); //показываем количество бомб вокруг
                 }
                 isFirstClick = false;
             }
@@ -67,10 +73,10 @@ namespace saper
                 }
                 else
                 {
-                    clickedButton.Image = Image.FromFile("");
+                    clickedButton.Image = Image.FromFile("C:/Users/пк/Desktop/4.png");
                 }
             }
-            CheckWin();
+            Win();
 
         }
         void Explode()
@@ -82,7 +88,8 @@ namespace saper
                     button.Image = Image.FromFile("C:/Users/пк/Desktop/4.png");
                 }
             }
-            MessageBox.Show("Увы....");
+            timer.Stop();
+            MessageBox.Show("Увы...\nЗатраченное время: " + label.Text, "Поражение", MessageBoxButtons.OK);
             //Application.Restart();
         }
         void EmptyFieldButtonClick(FieldButton clickedButton)
@@ -107,16 +114,15 @@ namespace saper
             while (queue.Count > 0)
             {
                 FieldButton currentCell = queue.Dequeue();
-                //int bombsAround = CountBombsAround(x, y);
                 OpenCell(currentCell.xCoord, currentCell.yCoord, currentCell);
                 cellsOpened++;
-                if (CountBombsAround(currentCell.xCoord, currentCell.yCoord) == 0)
+                if (BombsAround(currentCell.xCoord, currentCell.yCoord) == 0)
                 {
-                    for (int j = currentCell.yCoord - 1; j <= currentCell.yCoord + 1; j++) //поменять
+                    for (int j = currentCell.yCoord - 1; j <= currentCell.yCoord + 1; j++) 
                     {
                         for (int i = currentCell.xCoord - 1; i <= currentCell.xCoord + 1; i++)
                         {
-                            if (i == currentCell.xCoord && j == currentCell.yCoord)//
+                            if (i == currentCell.xCoord && j == currentCell.yCoord)
                             {
                                 continue;
                             }
@@ -135,18 +141,18 @@ namespace saper
         }
         void OpenCell(int x, int y, FieldButton clickedButton)
         {
-            int bombsAround = CountBombsAround(x,y);
+            int bombsAround = BombsAround(x,y);
             if (bombsAround == 0)
             {
-
+                //если 0 бомб вокруг, ничего не пишем
             }
             else
             {
-                clickedButton.Text = "" + bombsAround;
+                clickedButton.Text = "" + bombsAround; //записываем количество бомб вокруг
             }
             clickedButton.Enabled = false;
         }
-        int CountBombsAround(int xB, int yB)
+        int BombsAround(int xB, int yB)
         {
             int bombsAround = 0;
             for (int x = xB - 1; x <= xB + 1; x++)
@@ -164,13 +170,14 @@ namespace saper
             }
             return bombsAround;
         }
-        void CheckWin()
+        void Win()
         {
             int cells = width * height;
             int emptyCells = cells - bombs;
             if (cellsOpened >= emptyCells)
             {
-                MessageBox.Show("Победа!");
+                timer.Stop();
+                MessageBox.Show("Победа!\nЗатраченное время: " + label.Text, "Победа", MessageBoxButtons.OK);
             }
         }
 
@@ -222,8 +229,8 @@ namespace saper
                 for (int i = 0; i < width; i++)
                 {
                     FieldButton newbutton = new FieldButton();
-                    newbutton.Location = new Point(i * offset, j * offset);
-                    newbutton.Size = new Size(offset, offset);
+                    newbutton.Location = new Point(i * size, j * size);
+                    newbutton.Size = new Size(size, size);
                     newbutton.isClickable = true;
                     if (random.Next(0, 100) <= 2)
                     {
@@ -247,8 +254,8 @@ namespace saper
                 for (int i = 0; i < width; i++)
                 {
                     FieldButton newbutton = new FieldButton();
-                    newbutton.Location = new Point(i * offset, j * offset);
-                    newbutton.Size = new Size(offset, offset);
+                    newbutton.Location = new Point(i * size, j * size);
+                    newbutton.Size = new Size(size, size);
                     newbutton.isClickable = true;
                     if (random.Next(0, 100) <= 20)
                     {
@@ -271,8 +278,8 @@ namespace saper
                 for (int i = 0; i < width; i++)
                 {
                     FieldButton newbutton = new FieldButton();
-                    newbutton.Location = new Point(i * offset, j * offset);
-                    newbutton.Size = new Size(offset, offset);
+                    newbutton.Location = new Point(i * size, j * size);
+                    newbutton.Size = new Size(size, size);
                     newbutton.isClickable = true;
                     if (random.Next(0, 100) <= 50)
                     {
@@ -285,6 +292,19 @@ namespace saper
                     field[i, j] = newbutton;
                 }
             }
+        }
+
+        private void timer_Tick(object sender, EventArgs e)
+        {
+            seconds += 1;
+
+            if (seconds == 60)
+            {
+                seconds = 0;
+                minutes += 1;
+            }
+
+            label.Text =  minutes.ToString("00") + ":" + seconds.ToString("00");
         }
     }
     class FieldButton : Button

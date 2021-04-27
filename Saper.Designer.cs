@@ -29,6 +29,7 @@ namespace saper
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.новаяИграToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.уровеньСложностиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -37,10 +38,9 @@ namespace saper
             this.сложныйToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.справкаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.выходToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.panel = new System.Windows.Forms.Panel();
-            this.richTextBox_for_scores = new System.Windows.Forms.RichTextBox();
+            this.timer = new System.Windows.Forms.Timer(this.components);
+            this.label = new System.Windows.Forms.Label();
             this.menuStrip.SuspendLayout();
-            this.panel.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip
@@ -53,7 +53,7 @@ namespace saper
             this.выходToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Size = new System.Drawing.Size(783, 30);
+            this.menuStrip.Size = new System.Drawing.Size(783, 28);
             this.menuStrip.TabIndex = 0;
             this.menuStrip.Text = "menuStrip1";
             // 
@@ -109,26 +109,18 @@ namespace saper
             this.выходToolStripMenuItem.Text = "Выход";
             this.выходToolStripMenuItem.Click += new System.EventHandler(this.выходToolStripMenuItem_Click);
             // 
-            // panel
+            // timer
             // 
-            this.panel.Controls.Add(this.richTextBox_for_scores);
-            this.panel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel.Location = new System.Drawing.Point(567, 30);
-            this.panel.Name = "panel";
-            this.panel.Size = new System.Drawing.Size(216, 548);
-            this.panel.TabIndex = 1;
+            this.timer.Interval = 1000;
+            this.timer.Tick += new System.EventHandler(this.timer_Tick);
             // 
-            // richTextBox_for_scores
+            // label
             // 
-            this.richTextBox_for_scores.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.richTextBox_for_scores.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.richTextBox_for_scores.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.richTextBox_for_scores.Location = new System.Drawing.Point(0, 0);
-            this.richTextBox_for_scores.Name = "richTextBox_for_scores";
-            this.richTextBox_for_scores.ReadOnly = true;
-            this.richTextBox_for_scores.Size = new System.Drawing.Size(216, 548);
-            this.richTextBox_for_scores.TabIndex = 0;
-            this.richTextBox_for_scores.Text = "";
+            this.label.AutoSize = true;
+            this.label.Location = new System.Drawing.Point(650, 45);
+            this.label.Name = "label";
+            this.label.Size = new System.Drawing.Size(0, 17);
+            this.label.TabIndex = 1;
             // 
             // MainForm
             // 
@@ -136,15 +128,14 @@ namespace saper
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.ClientSize = new System.Drawing.Size(783, 578);
-            this.Controls.Add(this.panel);
             this.Controls.Add(this.menuStrip);
+            this.Controls.Add(this.label);
             this.MainMenuStrip = this.menuStrip;
             this.Name = "MainForm";
             this.Text = "Minesweeper by Dina";
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
-            this.panel.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -160,8 +151,8 @@ namespace saper
         private System.Windows.Forms.ToolStripMenuItem сложныйToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem справкаToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem выходToolStripMenuItem;
-        private System.Windows.Forms.Panel panel;
-        private System.Windows.Forms.RichTextBox richTextBox_for_scores;
+        private System.Windows.Forms.Timer timer;
+        private System.Windows.Forms.Label label;
     }
 }
 
